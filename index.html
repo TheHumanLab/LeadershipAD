@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leadership Authority Diagnostic | The Human Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #111010;
+    --gold: #BAA36C;
+    --gold-dim: #7a6b45;
+    --cream: #E8E4DC;
+    --cream-dim: #9e9a93;
+    --surface: #1a1918;
+    --surface2: #222120;
+    --border: rgba(186,163,108,0.15);
+    --border-active: rgba(186,163,108,0.5);
+    --danger: #8B3A3A;
+    --danger-light: rgba(139,58,58,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    line-height: 1.7;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── GATE / INTRO ── */
+  #screen-gate {
+    min-height: 100vh;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  #screen-gate.active { display: flex; }
+
+  #screen-gate::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -20%;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(186,163,108,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .gate-inner {
+    max-width: 560px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .thl-mark {
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+  }
+
+  .gate-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    font-weight: 300;
+    line-height: 1.15;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+  }
+
+  .gate-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .gate-subtitle {
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 2.5rem;
+  }
+
+  .gate-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--gold-dim);
+    margin: 0 auto 2.5rem;
+    opacity: 0.4;
+  }
+
+  .gate-description {
+    font-size: 0.95rem;
+    color: var(--cream-dim);
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+    text-align: left;
+  }
+
+  .gate-meta {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .gate-meta-item {
+    text-align: center;
+  }
+
+  .gate-meta-item .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: var(--gold);
+    display: block;
+    line-height: 1;
+  }
+
+  .gate-meta-item .label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--cream-dim);
+    text-transform: uppercase;
+  }
+
+  .stripe-btn {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--bg);
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 1rem 2.5rem;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .stripe-btn:hover {
+    background: #cdb47a;
+    transform: translateY(-1px);
+  }
+
+  .gate-note {
+    margin-top: 1.5rem;
+    font-size: 11px;
+    color: var(--cream-dim);
+    opacity: 0.6;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── INSTRUMENT SCREEN ── */
+  #screen-instrument {
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .instrument-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-brand {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+  }
+
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+    max-width: 400px;
+    margin: 0 2rem;
+  }
+
+  .progress-bar-bg {
+    flex: 1;
+    height: 1px;
+    background: rgba(186,163,108,0.15);
+    position: relative;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--gold);
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  .progress-label {
+    font-size: 11px;
+    color: var(--gold-dim);
+    white-space: nowrap;
+    letter-spacing: 0.08em;
+  }
+
+  .instrument-body {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+  }
+
+  /* SECTION HEADER */
+  .section-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-tag {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 300;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+  }
+
+  .section-description {
+    font-size: 0.85rem;
+    color: var(--cream-dim);
+    line-height: 1.7;
+  }
+
+  /* CLASSIFICATION */
+  .classify-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  @media (max-width: 500px) { .classify-grid { grid-template-columns: 1fr; } }
+
+  .field-group { display: flex; flex-direction: column; gap: 0.5rem; }
+
+  .field-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+  }
+
+  .field-input, .field-select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 300;
+    padding: 0.75rem 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+    border-radius: 0;
+  }
+
+  .field-input:focus, .field-select:focus { border-color: var(--gold-dim); }
+
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: '↓';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gold-dim);
+    font-size: 12px;
+    pointer-events: none;
+  }
+
+  /* QUESTION BLOCK */
+  .variable-block {
+    margin-bottom: 3rem;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .variable-tag {
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .variable-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .question-item {
+    margin-bottom: 1.75rem;
+  }
+
+  .question-text {
+    font-size: 0.9rem;
+    color: var(--cream);
+    line-height: 1.65;
+    margin-bottom: 0.9rem;
+    font-weight: 300;
+  }
+
+  .scale-type {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--cream-dim);
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+    opacity: 0.6;
+  }
+
+  /* LIKERT */
+  .likert {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+  }
+
+  .likert-option {
+    flex: 1;
+    cursor: pointer;
+  }
+
+  .likert-option input { display: none; }
+
+  .likert-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 0.6rem 0.2rem;
+    border: 1px solid var(--border);
+    background: transparent;
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+
+  .likert-num {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--cream-dim);
+    line-height: 1;
+  }
+
+  .likert-micro {
+    font-size: 8px;
+    letter-spacing: 0.05em;
+    color: var(--cream-dim);
+    text-align: center;
+    opacity: 0;
+    line-height: 1.3;
+  }
+
+  .likert-option input:checked + .likert-btn {
+    border-color: var(--gold);
+    background: rgba(186,163,108,0.08);
+  }
+
+  .likert-option input:checked + .likert-btn .likert-num { color: var(--gold); }
+  .likert-option input:checked + .likert-btn .likert-micro { opacity: 1; color: var(--gold-dim); }
+
+  .likert-option:hover .likert-btn {
+    border-color: var(--border-active);
+    background: rgba(186,163,108,0.04);
+  }
+
+  .scale-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    font-size: 9px;
+    color: var(--cream-dim);
+    opacity: 0.5;
+    letter-spacing: 0.05em;
+  }
+
+  /* ERROR STATE */
+  .question-item.error .likert-btn { border-color: rgba(139,58,58,0.4); }
+  .error-msg {
+    font-size: 10px;
+    color: #c0786e;
+    margin-top: 0.4rem;
+    letter-spacing: 0.05em;
+    display: none;
+  }
+  .question-item.error .error-msg { display: block; }
+
+  /* EMAIL COLLECTION */
+  .email-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .email-section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+  }
+
+  .email-section-desc {
+    font-size: 0.82rem;
+    color: var(--cream-dim);
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+  }
+
+  /* SUBMIT */
+  .submit-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .submit-btn {
+    background: var(--gold);
+    color: var(--bg);
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 1rem 2.5rem;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .submit-btn:hover { background: #cdb47a; transform: translateY(-1px); }
+  .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .submit-note {
+    font-size: 11px;
+    color: var(--cream-dim);
+    opacity: 0.5;
+  }
+
+  /* ── HOLDING SCREEN ── */
+  #screen-holding {
+    min-height: 100vh;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    text-align: center;
+  }
+  #screen-holding.active { display: flex; }
+
+  .holding-inner { max-width: 520px; }
+
+  .holding-icon {
+    width: 60px;
+    height: 60px;
+    border: 1px solid var(--border-active);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+    color: var(--gold);
+    font-size: 1.4rem;
+  }
+
+  .holding-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    font-weight: 300;
+    color: var(--cream);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .holding-body {
+    font-size: 0.9rem;
+    color: var(--cream-dim);
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+  }
+
+  .holding-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--gold-dim);
+    margin: 0 auto 2.5rem;
+    opacity: 0.3;
+  }
+
+  .upsell-card {
+    background: var(--surface);
+    border: 1px solid var(--border-active);
+    padding: 2rem;
+    text-align: left;
+    margin-bottom: 2rem;
+  }
+
+  .upsell-tag {
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .upsell-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: var(--cream);
+    margin-bottom: 0.75rem;
+  }
+
+  .upsell-body {
+    font-size: 0.82rem;
+    color: var(--cream-dim);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .upsell-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .upsell-btn {
+    display: inline-block;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.8rem 2rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .upsell-btn:hover {
+    background: var(--gold);
+    color: var(--bg);
+  }
+
+  .holding-footnote {
+    font-size: 11px;
+    color: var(--cream-dim);
+    opacity: 0.4;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     SCREEN 1 — GATE (shown by default)
+════════════════════════════════════════════ -->
+<div id="screen-gate" class="screen active">
+  <div class="gate-inner">
+    <div class="thl-mark">[ THL-SYS ] · The Human Lab</div>
+
+    <h1 class="gate-title">
+      Leadership<br><em>Authority</em><br>Diagnostic
+    </h1>
+    <div class="gate-subtitle">Instrument LAD-01 · Leadership Layer</div>
+    <div class="gate-divider"></div>
+
+    <p class="gate-description">
+      Authority in the wrong place rarely announces itself. It accumulates — quietly, structurally — until the cost becomes visible in stalled decisions, key-person dependency, and execution that requires specific individuals to function.<br><br>
+      This diagnostic examines how authority actually operates in your organisation — not how it is defined on paper, but how it functions under operational pressure. You will receive a structured report identifying authority placement risk, delegation integrity, and structural dependency exposure within the leadership layer.
+    </p>
+
+    <div class="gate-meta">
+      <div class="gate-meta-item">
+        <span class="num">28</span>
+        <span class="label">Questions</span>
+      </div>
+      <div class="gate-meta-item">
+        <span class="num">8–10</span>
+        <span class="label">Minutes</span>
+      </div>
+      <div class="gate-meta-item">
+        <span class="num">6</span>
+        <span class="label">Diagnostic dimensions</span>
+      </div>
+      <div class="gate-meta-item">
+        <span class="num">$127</span>
+        <span class="label">Report delivered by email</span>
+      </div>
+    </div>
+
+    <!-- REPLACE href with your Stripe payment link. On success, Stripe redirects to this page with ?paid=true -->
+    <button class="stripe-btn" onclick="handlePayment()">
+      Begin Diagnostic — $127
+    </button>
+
+    <p class="gate-note">Report delivered within 24 hours · Confidential · No data shared</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SCREEN 2 — INSTRUMENT
+════════════════════════════════════════════ -->
+<div id="screen-instrument" class="screen">
+
+  <div class="instrument-header">
+    <div class="header-brand">[ THL ] Leadership Authority Diagnostic</div>
+    <div class="progress-wrap">
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+      </div>
+      <div class="progress-label" id="progress-label">0 / 28</div>
+    </div>
+  </div>
+
+  <div class="instrument-body">
+
+    <!-- CLASSIFICATION -->
+    <div class="section-header">
+      <div class="section-tag">Classification · Before you begin</div>
+      <h2 class="section-title">About your role</h2>
+      <p class="section-description">This context shapes how your responses are interpreted. All information is confidential and used solely for diagnostic purposes.</p>
+    </div>
+
+    <div class="classify-grid">
+      <div class="field-group">
+        <label class="field-label" for="role-title">Role title</label>
+        <input class="field-input" type="text" id="role-title" placeholder="e.g. CEO, COO, Director">
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="dept">Department / Function</label>
+        <input class="field-input" type="text" id="dept" placeholder="e.g. Operations, Finance">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Years in current role</label>
+        <div class="select-wrap">
+          <select class="field-select" id="tenure">
+            <option value="">Select</option>
+            <option>Less than 1 year</option>
+            <option>1–3 years</option>
+            <option>3–5 years</option>
+            <option>5+ years</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Direct reports</label>
+        <div class="select-wrap">
+          <select class="field-select" id="reports">
+            <option value="">Select</option>
+            <option>None</option>
+            <option>1–3</option>
+            <option>4–8</option>
+            <option>9–15</option>
+            <option>16+</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Budget responsibility</label>
+        <div class="select-wrap">
+          <select class="field-select" id="budget">
+            <option value="">Select</option>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Organisation size</label>
+        <div class="select-wrap">
+          <select class="field-select" id="org-size">
+            <option value="">Select</option>
+            <option>Under 20</option>
+            <option>20–50</option>
+            <option>51–200</option>
+            <option>201–500</option>
+            <option>500+</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── VARIABLE 1: Decision Rights Architecture ── -->
+    <div class="variable-block">
+      <div class="variable-tag">Variable 1 of 6</div>
+      <div class="variable-name">Decision Rights Architecture</div>
+
+      <div class="question-item" data-q="1" data-type="perception">
+        <div class="scale-type">Agreement — 1 (Strongly Disagree) to 5 (Strongly Agree)</div>
+        <div class="question-text">Decision rights are clearly defined across the organisation — people know who holds final authority at each level.</div>
+        <div class="likert" data-name="q1">
+          <label class="likert-option"><input type="radio" name="q1" value="1"><div class="likert-btn"><span class="likert-num">1</span><span class="likert-micro">Strongly<br>disagree</span></div></label>
+          <label class="likert-option"><input type="radio" name="q1" value="2"><div class="likert-btn"><span class="likert-num">2</span><span class="likert-micro">Disagree</span></div></label>
+          <label class="likert-option"><input type="radio" name="q1" value="3"><div class="likert-btn"><span class="likert-num">3</span><span class="likert-micro">Neither</span></div></label>
+          <label class="likert-option"><input type="radio" name="q1" value="4"><div class="likert-btn"><span class="likert-num">4</span><span class="likert-micro">Agree</span></div></label>
+          <label class="likert-option"><input type="radio" name="q1" value="5"><div class="likert-btn"><span class="likert-num">5</span><span class="likert-micro">Strongly<br>agree</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="2" data-type="perception">
+        <div class="scale-type">Agreement</div>
+        <div class="question-text">I am confident in the precise boundaries of my own decision authority.</div>
+        <div class="likert" data-name="q2">
+          <label class="likert-option"><input type="radio" name="q2" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q2" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q2" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q2" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q2" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="3" data-type="behavioural">
+        <div class="scale-type">Frequency — 1 (Never) to 5 (Always)</div>
+        <div class="question-text">I override decisions that have already been made and communicated at levels below me.</div>
+        <div class="likert" data-name="q3">
+          <label class="likert-option"><input type="radio" name="q3" value="1"><div class="likert-btn"><span class="likert-num">1</span><span class="likert-micro">Never</span></div></label>
+          <label class="likert-option"><input type="radio" name="q3" value="2"><div class="likert-btn"><span class="likert-num">2</span><span class="likert-micro">Rarely</span></div></label>
+          <label class="likert-option"><input type="radio" name="q3" value="3"><div class="likert-btn"><span class="likert-num">3</span><span class="likert-micro">Sometimes</span></div></label>
+          <label class="likert-option"><input type="radio" name="q3" value="4"><div class="likert-btn"><span class="likert-num">4</span><span class="likert-micro">Often</span></div></label>
+          <label class="likert-option"><input type="radio" name="q3" value="5"><div class="likert-btn"><span class="likert-num">5</span><span class="likert-micro">Always</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="4" data-type="behavioural">
+        <div class="scale-type">Frequency</div>
+        <div class="question-text">I re-open or revise decisions after they have been communicated to the organisation.</div>
+        <div class="likert" data-name="q4">
+          <label class="likert-option"><input type="radio" name="q4" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q4" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q4" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q4" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q4" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+    </div>
+
+    <!-- ── VARIABLE 2: Authority–Role Alignment ── -->
+    <div class="variable-block">
+      <div class="variable-tag">Variable 2 of 6</div>
+      <div class="variable-name">Authority–Role Alignment</div>
+
+      <div class="question-item" data-q="5" data-type="perception">
+        <div class="scale-type">Agreement</div>
+        <div class="question-text">Authority aligns with formal roles across the organisation — managers are genuinely empowered to act within their defined scope.</div>
+        <div class="likert" data-name="q5">
+          <label class="likert-option"><input type="radio" name="q5" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q5" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q5" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q5" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q5" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="6" data-type="behavioural">
+        <div class="scale-type">Frequency</div>
+        <div class="question-text">I seek informal approval from peers or superiors before formalising decisions that fall within my own authority.</div>
+        <div class="likert" data-name="q6">
+          <label class="likert-option"><input type="radio" name="q6" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q6" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q6" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q6" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q6" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="7" data-type="behavioural">
+        <div class="scale-type">Frequency</div>
+        <div class="question-text">I bypass formal authority structures when I need things to move faster.</div>
+        <div class="likert" data-name="q7">
+          <label class="likert-option"><input type="radio" name="q7" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q7" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q7" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q7" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q7" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+    </div>
+
+    <!-- ── VARIABLE 3: Load Distribution & Compensation Behaviour ── -->
+    <div class="variable-block">
+      <div class="variable-tag">Variable 3 of 6</div>
+      <div class="variable-name">Load Distribution &amp; Compensation Behaviour</div>
+
+      <div class="question-item" data-q="8" data-type="perception">
+        <div class="scale-type">Agreement</div>
+        <div class="question-text">The leadership decision burden in this organisation is structurally sustainable.</div>
+        <div class="likert" data-name="q8">
+          <label class="likert-option"><input type="radio" name="q8" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q8" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q8" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q8" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q8" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="9" data-type="behavioural">
+        <div class="scale-type">Frequency</div>
+        <div class="question-text">I make decisions that should be delegated to someone below me.</div>
+        <div class="likert" data-name="q9">
+          <label class="likert-option"><input type="radio" name="q9" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q9" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q9" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q9" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q9" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="10" data-type="behavioural">
+        <div class="scale-type">Frequency</div>
+        <div class="question-text">I compensate for weak organisational systems through my own personal effort.</div>
+        <div class="likert" data-name="q10">
+          <label class="likert-option"><input type="radio" name="q10" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q10" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q10" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q10" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q10" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="11" data-type="behavioural">
+        <div class="scale-type">Frequency</div>
+        <div class="question-text">I carry responsibility that falls outside my formal scope because it would otherwise go unmanaged.</div>
+        <div class="likert" data-name="q11">
+          <label class="likert-option"><input type="radio" name="q11" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q11" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q11" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q11" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q11" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+    </div>
+
+    <!-- ── VARIABLE 4: Escalation & Information Integrity ── -->
+    <div class="variable-block">
+      <div class="variable-tag">Variable 4 of 6</div>
+      <div class="variable-name">Escalation &amp; Information Integrity</div>
+
+      <div class="question-item" data-q="12" data-type="perception">
+        <div class="scale-type">Agreement</div>
+        <div class="question-text">Employees feel genuinely safe raising dissenting views to leadership in this organisation.</div>
+        <div class="likert" data-name="q12">
+          <label class="likert-option"><input type="radio" name="q12" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q12" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q12" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q12" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q12" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="13" data-type="behavioural">
+        <div class="scale-type">Frequency</div>
+        <div class="question-text">I become aware of significant operational issues informally before they are formally escalated to me.</div>
+        <div class="likert" data-name="q13">
+          <label class="likert-option"><input type="radio" name="q13" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q13" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q13" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q13" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q13" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="14" data-type="behavioural">
+        <div class="scale-type">Frequency</div>
+        <div class="question-text">I withhold concerns from senior leadership to avoid appearing unable to manage them myself.</div>
+        <div class="likert" data-name="q14">
+          <label class="likert-option"><input type="radio" name="q14" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q14" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q14" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q14" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q14" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="15" data-type="behavioural">
+        <div class="scale-type">Frequency</div>
+        <div class="question-text">I experience situations where important information has clearly been withheld from me before I needed to act on it.</div>
+        <div class="likert" data-name="q15">
+          <label class="likert-option"><input type="radio" name="q15" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q15" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q15" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q15" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q15" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+    </div>
+
+    <!-- ── VARIABLE 5: Power Concentration & Network Dependency ── -->
+    <div class="variable-block">
+      <div class="variable-tag">Variable 5 of 6</div>
+      <div class="variable-name">Power Concentration &amp; Network Dependency</div>
+
+      <div class="question-item" data-q="16" data-type="perception">
+        <div class="scale-type">Agreement</div>
+        <div class="question-text">Influence in this organisation flows primarily through formal structures rather than informal networks.</div>
+        <div class="likert" data-name="q16">
+          <label class="likert-option"><input type="radio" name="q16" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q16" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q16" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q16" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q16" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="17" data-type="behavioural">
+        <div class="scale-type">Frequency</div>
+        <div class="question-text">Certain individuals accelerate or block organisational progress regardless of their formal title.</div>
+        <div class="likert" data-name="q17">
+          <label class="likert-option"><input type="radio" name="q17" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q17" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q17" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q17" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q17" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="18" data-type="behavioural">
+        <div class="scale-type">Frequency</div>
+        <div class="question-text">I rely on informal alliances rather than formal channels to move strategic initiatives forward.</div>
+        <div class="likert" data-name="q18">
+          <label class="likert-option"><input type="radio" name="q18" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q18" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q18" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q18" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q18" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+    </div>
+
+    <!-- ── VARIABLE 6: Succession Depth & Structural Dependency ── -->
+    <div class="variable-block">
+      <div class="variable-tag">Variable 6 of 6</div>
+      <div class="variable-name">Succession Depth &amp; Structural Dependency</div>
+
+      <div class="question-item" data-q="19" data-type="perception">
+        <div class="scale-type">Agreement</div>
+        <div class="question-text">If I left this organisation tomorrow, my responsibilities could be absorbed without significant structural disruption.</div>
+        <div class="likert" data-name="q19">
+          <label class="likert-option"><input type="radio" name="q19" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q19" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q19" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q19" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q19" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="20" data-type="perception">
+        <div class="scale-type">Agreement</div>
+        <div class="question-text">There are leaders in this organisation who could step into my role within a reasonable transition period.</div>
+        <div class="likert" data-name="q20">
+          <label class="likert-option"><input type="radio" name="q20" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q20" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q20" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q20" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q20" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="21" data-type="perception">
+        <div class="scale-type">Agreement</div>
+        <div class="question-text">The current organisational structure will scale effectively as the organisation grows without requiring the same individuals in the same roles.</div>
+        <div class="likert" data-name="q21">
+          <label class="likert-option"><input type="radio" name="q21" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q21" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q21" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q21" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q21" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="22" data-type="behavioural">
+        <div class="scale-type">Frequency</div>
+        <div class="question-text">I personally re-energise stalled initiatives that should sustain themselves without my involvement.</div>
+        <div class="likert" data-name="q22">
+          <label class="likert-option"><input type="radio" name="q22" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q22" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q22" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q22" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q22" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+    </div>
+
+    <!-- ── PSYCHOLOGICAL SIGNAL ITEMS (unlabelled) ── -->
+    <div class="variable-block">
+      <div class="variable-tag">Closing items</div>
+      <div class="variable-name">Final Statements</div>
+
+      <div class="question-item" data-q="23" data-type="perception">
+        <div class="scale-type">Agreement</div>
+        <div class="question-text">I feel pressure to appear decisive even when I do not have sufficient clarity to decide well.</div>
+        <div class="likert" data-name="q23">
+          <label class="likert-option"><input type="radio" name="q23" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q23" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q23" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q23" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q23" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="24" data-type="perception">
+        <div class="scale-type">Agreement</div>
+        <div class="question-text">I experience tension or misalignment with other leaders in this organisation about how authority should operate.</div>
+        <div class="likert" data-name="q24">
+          <label class="likert-option"><input type="radio" name="q24" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q24" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q24" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q24" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q24" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="25" data-type="perception">
+        <div class="scale-type">Agreement</div>
+        <div class="question-text">A small number of individuals hold disproportionate influence over how work gets done in this organisation.</div>
+        <div class="likert" data-name="q25">
+          <label class="likert-option"><input type="radio" name="q25" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q25" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q25" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q25" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q25" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="26" data-type="perception">
+        <div class="scale-type">Agreement</div>
+        <div class="question-text">Strategic decisions in this organisation are made with adequate reference to external conditions.</div>
+        <div class="likert" data-name="q26">
+          <label class="likert-option"><input type="radio" name="q26" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q26" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q26" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q26" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q26" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="27" data-type="perception">
+        <div class="scale-type">Agreement</div>
+        <div class="question-text">Accountability in this organisation is applied consistently across all leadership levels — not selectively.</div>
+        <div class="likert" data-name="q27">
+          <label class="likert-option"><input type="radio" name="q27" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q27" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q27" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q27" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q27" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+
+      <div class="question-item" data-q="28" data-type="perception">
+        <div class="scale-type">Agreement</div>
+        <div class="question-text">Messaging across the leadership team is consistent — different leaders communicate a coherent and aligned direction.</div>
+        <div class="likert" data-name="q28">
+          <label class="likert-option"><input type="radio" name="q28" value="1"><div class="likert-btn"><span class="likert-num">1</span></div></label>
+          <label class="likert-option"><input type="radio" name="q28" value="2"><div class="likert-btn"><span class="likert-num">2</span></div></label>
+          <label class="likert-option"><input type="radio" name="q28" value="3"><div class="likert-btn"><span class="likert-num">3</span></div></label>
+          <label class="likert-option"><input type="radio" name="q28" value="4"><div class="likert-btn"><span class="likert-num">4</span></div></label>
+          <label class="likert-option"><input type="radio" name="q28" value="5"><div class="likert-btn"><span class="likert-num">5</span></div></label>
+        </div>
+        <div class="error-msg">Please select a response.</div>
+      </div>
+    </div>
+
+    <!-- ── EMAIL CAPTURE ── -->
+    <div class="email-section">
+      <div class="email-section-title">Where should we send your report?</div>
+      <div class="email-section-desc">Your Leadership Authority Diagnostic report will be delivered to the address below within 24 hours. It will include scored results across all six dimensions, pattern interpretation, and a confidential structural summary.</div>
+      <div class="classify-grid" style="margin-bottom:0;">
+        <div class="field-group">
+          <label class="field-label" for="first-name">First name</label>
+          <input class="field-input" type="text" id="first-name" placeholder="Your first name">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="email">Email address</label>
+          <input class="field-input" type="email" id="email" placeholder="you@organisation.com">
+        </div>
+        <div class="field-group" style="grid-column: 1/-1;">
+          <label class="field-label" for="org-name">Organisation name <span style="opacity:0.4;font-size:9px;">(optional)</span></label>
+          <input class="field-input" type="text" id="org-name" placeholder="Your organisation">
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <button class="submit-btn" id="submit-btn" onclick="submitDiagnostic()">Submit Diagnostic</button>
+      <span class="submit-note">Responses are confidential · Report delivered within 24 hours</span>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SCREEN 3 — HOLDING / UPSELL
+════════════════════════════════════════════ -->
+<div id="screen-holding" class="screen">
+  <div class="holding-inner">
+    <div class="holding-icon">✓</div>
+
+    <h2 class="holding-title">Your diagnostic<br>has been received.</h2>
+
+    <p class="holding-body">
+      Thank you, <span id="holding-name">—</span>. Your Leadership Authority Diagnostic responses have been submitted. Your report will be prepared and delivered to <strong id="holding-email">your email</strong> within 24 hours.<br><br>
+      The report will cover authority placement risk, delegation integrity, power concentration exposure, succession depth, and your structural dependency profile across the six diagnostic dimensions.
+    </p>
+
+    <div class="holding-divider"></div>
+
+    <div class="upsell-card">
+      <div class="upsell-tag">[ THL ] Full Service · Leadership Authority Audit</div>
+      <div class="upsell-title">This diagnostic surfaces the pattern.<br>The full audit names what's driving it.</div>
+      <div class="upsell-body">
+        The Leadership Authority Audit is a forensic examination of how authority operates within your organisation — examining decision rights placement, delegation maturity, power concentration risk, escalation suppression, and succession vulnerability across the entire leadership layer.<br><br>
+        Findings are delivered as a confidential executive diagnostic — precise, risk-flagged, and designed for founders, CEOs, and boards that require structural intelligence about the leadership layer without interpretive softening.
+      </div>
+      <div class="upsell-price">$900</div>
+      <!-- REPLACE href with your booking / enquiry link -->
+      <a class="upsell-btn" href="/cdn-cgi/l/email-protection#0a626f6666654a627f676b64666b68656c6c6369636b662469656735797f68606f697e37466f6b6e6f787962637a2a4b7f7e626578637e732a4b7f6e637e2a4f647b7f637873">Enquire About the Full Audit</a>
+    </div>
+
+    <p class="holding-footnote">
+      Kaylee-Jane | The Human Lab · humanlabofficial.com<br>
+      [ THL-SYS ] · Leadership Authority Diagnostic LAD-01
+    </p>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  const TOTAL_Q = 28;
+
+  // ── PAYMENT GATE ──
+  // In production: replace this with a Stripe payment link redirect.
+  // Stripe redirects back to this URL with ?paid=true on success.
+  function handlePayment() {
+    // PRODUCTION: window.location.href = 'YOUR_STRIPE_PAYMENT_LINK';
+    // DEMO: skip gate and go straight to instrument
+    showInstrument();
+  }
+
+  // Check for Stripe success redirect on page load
+  window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('paid') === 'true') {
+      showInstrument();
+    }
+    updateProgress();
+  });
+
+  function showInstrument() {
+    document.getElementById('screen-gate').classList.remove('active');
+    document.getElementById('screen-instrument').classList.add('active');
+  }
+
+  // ── PROGRESS TRACKING ──
+  function updateProgress() {
+    const answered = document.querySelectorAll('input[type="radio"]:checked').length;
+    const pct = Math.round((answered / TOTAL_Q) * 100);
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-label').textContent = answered + ' / ' + TOTAL_Q;
+  }
+
+  document.addEventListener('change', (e) => {
+    if (e.target.type === 'radio') {
+      updateProgress();
+      // Clear error state on answer
+      const qItem = e.target.closest('.question-item');
+      if (qItem) qItem.classList.remove('error');
+    }
+  });
+
+  // ── SUBMISSION ──
+  function submitDiagnostic() {
+    let valid = true;
+    const errors = [];
+
+    // Validate all 28 questions
+    for (let i = 1; i <= TOTAL_Q; i++) {
+      const answered = document.querySelector(`input[name="q${i}"]:checked`);
+      const qItem = document.querySelector(`[data-q="${i}"]`);
+      if (!answered) {
+        valid = false;
+        errors.push(i);
+        if (qItem) qItem.classList.add('error');
+      }
+    }
+
+    // Validate email
+    const email = document.getElementById('email').value.trim();
+    const firstName = document.getElementById('first-name').value.trim();
+    if (!email || !email.includes('@')) {
+      valid = false;
+      document.getElementById('email').style.borderColor = 'rgba(139,58,58,0.6)';
+    }
+
+    if (!valid) {
+      // Scroll to first error
+      const firstError = document.querySelector('.question-item.error, #email');
+      if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    // Collect all responses
+    const responses = {};
+    for (let i = 1; i <= TOTAL_Q; i++) {
+      responses[`q${i}`] = document.querySelector(`input[name="q${i}"]:checked`).value;
+    }
+
+    const payload = {
+      instrument: 'LAD-01',
+      respondent: {
+        firstName,
+        email,
+        orgName: document.getElementById('org-name').value.trim(),
+        roleTitle: document.getElementById('role-title').value.trim(),
+        department: document.getElementById('dept').value.trim(),
+        tenure: document.getElementById('tenure').value,
+        directReports: document.getElementById('reports').value,
+        budgetResponsibility: document.getElementById('budget').value,
+        orgSize: document.getElementById('org-size').value,
+      },
+      responses,
+      submittedAt: new Date().toISOString()
+    };
+
+    // ── FORMSPREE SUBMISSION ──
+    // Replace YOUR_FORMSPREE_ID with your actual Formspree endpoint
+    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORMSPREE_ID';
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+
+    fetch(FORMSPREE_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(res => {
+      if (res.ok) {
+        showHolding(firstName, email);
+      } else {
+        // Still show holding screen — don't block the buyer
+        showHolding(firstName, email);
+        console.warn('Formspree submission failed — check endpoint ID');
+      }
+    })
+    .catch(() => {
+      // Network error — still show holding screen
+      showHolding(firstName, email);
+    });
+  }
+
+  function showHolding(name, email) {
+    document.getElementById('screen-instrument').classList.remove('active');
+    document.getElementById('screen-holding').classList.add('active')
